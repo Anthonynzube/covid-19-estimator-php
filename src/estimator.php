@@ -1,6 +1,4 @@
 <?php
-// $url = 'data.json';
-// $data = file_get_contents($url);
 
 $data = '{
     "region": {
@@ -27,10 +25,18 @@ function covid19ImpactEstimator($data)
   $totalHospitalBeds =  $decodedData->totalHospitalBeds;
   $avgDailyIncomeInUSD = $decodedData->region->avgDailyIncomeInUSD;
 
+  if ($timeToElapse > 0 && $periodType == "days") {
+    $timeToElapse = $timeToElapse;
+  }elseif ($timeToElapse > 0 && $periodType == "weeks") {
+    $timeToElapse = $timeToElapse * 7;
+  }elseif ($timeToElapse > 0 && $periodType == "months") {
+    $timeToElapse = $timeToElapse * 30;
+  }
 
+  $factor = 2**floor($timeToElapse/3);
 
   $currentlyInfected = $reportedCases * 10;
-  $infectionsByRequestedTime = $currentlyInfected * 512; 
+  $infectionsByRequestedTime = $currentlyInfected * $factor; 
   $severeCasesByRequestedTime = round(0.15 * $infectionsByRequestedTime, 0);
   $hospitalBedsByRequestedTime = round((0.35 * $totalHospitalBeds) - $severeCasesByRequestedTime, 0);
   $casesForICUByRequestedTime = round(0.05 * $infectionsByRequestedTime, 0);
@@ -49,7 +55,7 @@ function covid19ImpactEstimator($data)
   $infectionsByRequestedTime;
 
   $currentlyInfected = $reportedCases * 50;
-  $infectionsByRequestedTime = $currentlyInfected * 512;
+  $infectionsByRequestedTime = $currentlyInfected * $factor; 
   $severeCasesByRequestedTime = round(0.15 * $infectionsByRequestedTime, 0);
   $hospitalBedsByRequestedTime = round((0.35 * $totalHospitalBeds) - $severeCasesByRequestedTime, 0);
   $casesForICUByRequestedTime = round(0.05 * $infectionsByRequestedTime, 0);
