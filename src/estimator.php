@@ -18,67 +18,74 @@ function covid19ImpactEstimator($data)
 {
   $decodedData = json_decode($data);
 
+  $timeToElapse = $decodedData->timeToElapse;
+  $periodType = $decodedData->periodType;
   $reportedCases = $decodedData->reportedCases;
-  $periodType =  $decodedData->periodType;
-  $timeToElapse =  $decodedData->timeToElapse;
   $population =  $decodedData->population;
   $totalHospitalBeds =  $decodedData->totalHospitalBeds;
   $avgDailyIncomeInUSD = $decodedData->region->avgDailyIncomeInUSD;
 
-  if ($timeToElapse > 0 && $periodType == "days")
+  $impactCurrentlyInfected = $decodedData->reportedCases * 10;
+  $severeImpactCurrentlyInfected = $decodedData->reportedCases * 50;
+
+  if ($periodType === 'days')
   {
     $timeToElapse = $timeToElapse;
-
-  }elseif ($timeToElapse > 0 && $periodType == "weeks")
+    $factor = 2**floor($timeToElapse/3);
+    $impactInfectionsByRequestedTime = $impactCurrentlyInfected * $factor;
+    $severeImpactInfectionsByRequestedTime = $severeImpactCurrentlyInfected * $factor;
+  }elseif ($timeToElapse === 'weeks')
   {
     $timeToElapse = $timeToElapse * 7;
-    
-  }else  {
+    $factor = 2**floor(timeToElapse/3);
+    $impactInfectionsByRequestedTime = $impactCurrentlyInfected * $factor;
+    $severeImpactInfectionsByRequestedTime = $severeImpactCurrentlyInfected * $factor;
+  }elseif ($timeToElapse === 'months')
+  {
     $timeToElapse = $timeToElapse * 30;
+    $factor = 2**floor(timeToElapse/3);
+    $impactInfectionsByRequestedTime = $impactCurrentlyInfected * $factor;
+    $severeImpactInfectionsByRequestedTime = $severeImpactCurrentlyInfected * $factor;
+  }else
+  {
+    "period Type must be days, weeks or months";
   }
 
-  $factor = 2**floor($timeToElapse/3);
+  $impactSevereCasesByRequestedTime = floor(0.15 * $impactInfectionsByRequestedTime);
+  $severeImpactSevereCasesByRequestedTime = floor(0.15 * $severeImpactInfectionsByRequestedTime);
 
-  $currentlyInfected = $reportedCases * 10;
-  $infectionsByRequestedTime = $currentlyInfected * $factor; 
-  $severeCasesByRequestedTime = round(0.15 * $infectionsByRequestedTime, 0);
-  $hospitalBedsByRequestedTime = round((0.35 * $totalHospitalBeds) - $severeCasesByRequestedTime, 0);
-  $casesForICUByRequestedTime = round(0.05 * $infectionsByRequestedTime, 0);
-  $casesForVentilatorsByRequestedTime = round(0.02 * $infectionsByRequestedTime, 0);
-  $dollarsInFlight = round(($infectionsByRequestedTime * 0.65 * $avgDailyIncomeInUSD * 30), 0);
+  $impactHospitalBedsByRequestedTime = floor((0.35 * $totalHospitalBeds) - $impactSevereCasesByRequestedTime);
+  $severeImpactHospitalBedsByRequestedTime = floor((0.35 * $totalHospitalBeds) - $severeImpactSevereCasesByRequestedTime);
 
-  $impact['currentlyInfected'] = $currentlyInfected;
-  $impact['infectionsByRequestedTime'] = $infectionsByRequestedTime;
-  $impact['severeCasesByRequestedTime'] = $severeCasesByRequestedTime;
-  $impact['hospitalBedsByRequestedTime'] = $hospitalBedsByRequestedTime;
-  $impact['casesForICUByRequestedTime'] = $casesForICUByRequestedTime;
-  $impact['casesForVentilatorsByRequestedTime'] = $casesForVentilatorsByRequestedTime;
-  $impact['dollarsInFlight'] = $dollarsInFlight;
+  $impactCasesForICUByRequestedTime = floor(0.05 * $impactInfectionsByRequestedTime);
+  $severeImpactCasesForICUByRequestedTime = floor(0.05 * $severeImpactInfectionsByRequestedTime);
 
-  $currentlyInfected;
-  $infectionsByRequestedTime;
+  $impactCasesForVentilatorsByRequestedTime = floor(0.02 * $impactInfectionsByRequestedTime);
+  $severeImpactCasesForVentilatorsByRequestedTime = floor(0.02 * $severeImpactInfectionsByRequestedTime);
 
-  $currentlyInfected = $reportedCases * 50;
-  $infectionsByRequestedTime = $currentlyInfected * $factor; 
-  $severeCasesByRequestedTime = round(0.15 * $infectionsByRequestedTime, 0);
-  $hospitalBedsByRequestedTime = round((0.35 * $totalHospitalBeds) - $severeCasesByRequestedTime, 0);
-  $casesForICUByRequestedTime = round(0.05 * $infectionsByRequestedTime, 0);
-  $casesForVentilatorsByRequestedTime = round(0.02 * $infectionsByRequestedTime, 0);
-  $dollarsInFlight = round(($infectionsByRequestedTime * 0.65 * $avgDailyIncomeInUSD * 30), 0);
-
-  $severeImpact['currentlyInfected'] = $currentlyInfected;
-  $severeImpact['infectionsByRequestedTime'] = $infectionsByRequestedTime;
-  $severeImpact['severeCasesByRequestedTime'] = $severeCasesByRequestedTime;
-  $severeImpact['hospitalBedsByRequestedTime'] = $hospitalBedsByRequestedTime;
-  $severeImpact['casesForICUByRequestedTime'] = $casesForICUByRequestedTime;
-  $severeImpact['casesForVentilatorsByRequestedTime'] = $casesForVentilatorsByRequestedTime;
-  $severeImpact['dollarsInFlight'] = $dollarsInFlight;
-
+  $impactDollarsInFlight = floor(($impactInfectionsByRequestedTime * 0.65 * $avgDailyIncomeInUSD * 30));
+  $severeImpactDollarsInFlight = floor(($severeImpactInfectionsByRequestedTime * 0.65 * $avgDailyIncomeInUSD * 30));
 
   $data = array(
     "data" => $decodedData,
-    "impact" => $impact,
-    "severeImpact" => $severeImpact
+    "impact" => array(
+      'CurrentlyInfected' => $impactCurrentlyInfected,
+      'InfectionsByRequestedTime' => $impactInfectionsByRequestedTime,
+      'SevereCasesByRequestedTime' => $impactSevereCasesByRequestedTime,
+      'HospitalBedsByRequestedTime' => $impactHospitalBedsByRequestedTime,
+      'CasesForICUByRequestedTime' => $impactCasesForICUByRequestedTime,
+      'CasesForVentilatorsByRequestedTime' => $impactCasesForVentilatorsByRequestedTime,
+      'DollarsInFlight' => $impactDollarsInFlight
+    ),
+    "severeImpact" => array(
+      'CurrentlyInfected' => $severeImpactCurrentlyInfected,
+      'InfectionsByRequestedTime' => $severeImpactInfectionsByRequestedTime,
+      'SevereCasesByRequestedTime' => $severeImpactSevereCasesByRequestedTime,
+      'HospitalBedsByRequestedTime' => $severeImpactHospitalBedsByRequestedTime,
+      'CasesForICUByRequestedTime' => $severeImpactCasesForICUByRequestedTime,
+      'CasesForVentilatorsByRequestedTime' => $severeImpactCasesForVentilatorsByRequestedTime,
+      'DollarsInFlight' => $severeImpactDollarsInFlight
+    )
   );
 
   $data = json_encode($data);
