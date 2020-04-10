@@ -31,19 +31,19 @@ function covid19ImpactEstimator($data)
   if ($periodType === 'days')
   {
     $timeToElapse = $timeToElapse;
-    $factor = 2**floor($timeToElapse/3);
+    $factor = 2**intval($timeToElapse/3);
     $impactInfectionsByRequestedTime = $impactCurrentlyInfected * $factor;
     $severeImpactInfectionsByRequestedTime = $severeImpactCurrentlyInfected * $factor;
   }elseif ($timeToElapse === 'weeks')
   {
     $timeToElapse = $timeToElapse * 7;
-    $factor = 2**floor(timeToElapse/3);
+    $factor = 2**intval(timeToElapse/3);
     $impactInfectionsByRequestedTime = $impactCurrentlyInfected * $factor;
     $severeImpactInfectionsByRequestedTime = $severeImpactCurrentlyInfected * $factor;
   }elseif ($timeToElapse === 'months')
   {
     $timeToElapse = $timeToElapse * 30;
-    $factor = 2**floor(timeToElapse/3);
+    $factor = 2**intval(timeToElapse/3);
     $impactInfectionsByRequestedTime = $impactCurrentlyInfected * $factor;
     $severeImpactInfectionsByRequestedTime = $severeImpactCurrentlyInfected * $factor;
   }else
@@ -51,44 +51,44 @@ function covid19ImpactEstimator($data)
     return "period Type must be days, weeks or months";
   }
 
-  $impactSevereCasesByRequestedTime = floor(0.15 * $impactInfectionsByRequestedTime);
-  $severeImpactSevereCasesByRequestedTime = floor(0.15 * $severeImpactInfectionsByRequestedTime);
+  $impactSevereCasesByRequestedTime = intval(0.15 * $impactInfectionsByRequestedTime);
+  $severeImpactSevereCasesByRequestedTime = intval(0.15 * $severeImpactInfectionsByRequestedTime);
 
-  $impactHospitalBedsByRequestedTime = floor((0.35 * $totalHospitalBeds) - $impactSevereCasesByRequestedTime);
-  $severeImpactHospitalBedsByRequestedTime = floor((0.35 * $totalHospitalBeds) - $severeImpactSevereCasesByRequestedTime);
+  $impactHospitalBedsByRequestedTime = intval((0.35 * $totalHospitalBeds) - $impactSevereCasesByRequestedTime);
+  $severeImpactHospitalBedsByRequestedTime = intval((0.35 * $totalHospitalBeds) - $severeImpactSevereCasesByRequestedTime);
 
-  $impactCasesForICUByRequestedTime = floor(0.05 * $impactInfectionsByRequestedTime);
-  $severeImpactCasesForICUByRequestedTime = floor(0.05 * $severeImpactInfectionsByRequestedTime);
+  $impactCasesForICUByRequestedTime = intval(0.05 * $impactInfectionsByRequestedTime);
+  $severeImpactCasesForICUByRequestedTime = intval(0.05 * $severeImpactInfectionsByRequestedTime);
 
-  $impactCasesForVentilatorsByRequestedTime = floor(0.02 * $impactInfectionsByRequestedTime);
-  $severeImpactCasesForVentilatorsByRequestedTime = floor(0.02 * $severeImpactInfectionsByRequestedTime);
+  $impactCasesForVentilatorsByRequestedTime = intval(0.02 * $impactInfectionsByRequestedTime);
+  $severeImpactCasesForVentilatorsByRequestedTime = intval(0.02 * $severeImpactInfectionsByRequestedTime);
 
-  $impactDollarsInFlight = floor(($impactInfectionsByRequestedTime * 0.65 * $avgDailyIncomeInUSD * 30));
-  $severeImpactDollarsInFlight = floor(($severeImpactInfectionsByRequestedTime * 0.65 * $avgDailyIncomeInUSD * 30));
+  $impactDollarsInFlight = round(($impactInfectionsByRequestedTime * 0.65 * $avgDailyIncomeInUSD * 30), 2);
+  $severeImpactDollarsInFlight = round(($severeImpactInfectionsByRequestedTime * 0.65 * $avgDailyIncomeInUSD * 30), 2);
 
-  $data = array(
+  $response = array(
     "data" => $decodedData,
     "impact" => array(
-      'CurrentlyInfected' => $impactCurrentlyInfected,
-      'InfectionsByRequestedTime' => $impactInfectionsByRequestedTime,
-      'SevereCasesByRequestedTime' => $impactSevereCasesByRequestedTime,
-      'HospitalBedsByRequestedTime' => $impactHospitalBedsByRequestedTime,
-      'CasesForICUByRequestedTime' => $impactCasesForICUByRequestedTime,
-      'CasesForVentilatorsByRequestedTime' => $impactCasesForVentilatorsByRequestedTime,
-      'DollarsInFlight' => $impactDollarsInFlight
+      'currentlyInfected' => $impactCurrentlyInfected,
+      'infectionsByRequestedTime' => $impactInfectionsByRequestedTime,
+      'severeCasesByRequestedTime' => $impactSevereCasesByRequestedTime,
+      'hospitalBedsByRequestedTime' => $impactHospitalBedsByRequestedTime,
+      'casesForICUByRequestedTime' => $impactCasesForICUByRequestedTime,
+      'casesForVentilatorsByRequestedTime' => $impactCasesForVentilatorsByRequestedTime,
+      'dollarsInFlight' => $impactDollarsInFlight
     ),
     "severeImpact" => array(
-      'CurrentlyInfected' => $severeImpactCurrentlyInfected,
-      'InfectionsByRequestedTime' => $severeImpactInfectionsByRequestedTime,
-      'SevereCasesByRequestedTime' => $severeImpactSevereCasesByRequestedTime,
-      'HospitalBedsByRequestedTime' => $severeImpactHospitalBedsByRequestedTime,
-      'CasesForICUByRequestedTime' => $severeImpactCasesForICUByRequestedTime,
-      'CasesForVentilatorsByRequestedTime' => $severeImpactCasesForVentilatorsByRequestedTime,
-      'DollarsInFlight' => $severeImpactDollarsInFlight
+      'currentlyInfected' => $severeImpactCurrentlyInfected,
+      'infectionsByRequestedTime' => $severeImpactInfectionsByRequestedTime,
+      'severeCasesByRequestedTime' => $severeImpactSevereCasesByRequestedTime,
+      'hospitalBedsByRequestedTime' => $severeImpactHospitalBedsByRequestedTime,
+      'casesForICUByRequestedTime' => $severeImpactCasesForICUByRequestedTime,
+      'casesForVentilatorsByRequestedTime' => $severeImpactCasesForVentilatorsByRequestedTime,
+      'dollarsInFlight' => $severeImpactDollarsInFlight
     )
   );
 
-  $data = json_encode($data);
+  $data = json_encode($response);
   
   return $data;
 }
