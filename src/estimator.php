@@ -48,7 +48,7 @@ function covid19ImpactEstimator($data)
     $severeImpactInfectionsByRequestedTime = $severeImpactCurrentlyInfected * $factor;
   }else
   {
-    "period Type must be days, weeks or months";
+    return "period Type must be days, weeks or months";
   }
 
   $impactSevereCasesByRequestedTime = floor(0.15 * $impactInfectionsByRequestedTime);
