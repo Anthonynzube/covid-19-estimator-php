@@ -1,30 +1,29 @@
 <?php
 
-$data = [
-
-  "region"=> [
-    "name"=> "Africa",
-    "avgAge"=> 19.7,
-    "avgDailyIncomeInUSD"=> 5,
-    "avgDailyIncomePopulation"=> 0.71
-  ],
-  "periodType"=> "days",
-  "timeToElapse"=> 58,
-  "reportedCases"=> 674,
-  "population"=> 66622705,
-  "totalHospitalBeds"=> 1380614
-];
+$data = '{
+    "region": {
+        "name": "Africa",
+        "avgAge": 19.7,
+        "avgDailyIncomeInUSD": 5,
+        "avgDailyIncomePopulation": 0.71
+    },
+    "periodType": "days",
+    "timeToElapse": 58,
+    "reportedCases": 674,
+    "population": 66622705,
+    "totalHospitalBeds": 1380614
+}';
 
 function covid19ImpactEstimator($data)
 {
-  // $decodedData = json_decode($data);
+  $decodedData = json_decode($data);
 
-  $reportedCases = $data['reportedCases'];
-  $periodType =  $data['periodType'];
-  $timeToElapse =  $data['timeToElapse'];
-  $population =  $data['population'];
-  $totalHospitalBeds =  $data['totalHospitalBeds'];
-  $avgDailyIncomeInUSD = $data['region']['avgDailyIncomeInUSD'];
+  $reportedCases = $decodedData->reportedCases;
+  $periodType =  $decodedData->periodType;
+  $timeToElapse =  $decodedData->timeToElapse;
+  $population =  $decodedData->population;
+  $totalHospitalBeds =  $decodedData->totalHospitalBeds;
+  $avgDailyIncomeInUSD = $decodedData->region->avgDailyIncomeInUSD;
 
   if ($timeToElapse > 0 && $periodType == "days")
   {
@@ -78,7 +77,7 @@ function covid19ImpactEstimator($data)
 
 
   $data = array(
-    "data" => $data,
+    "data" => $decodedData,
     "impact" => $impact,
     "severeImpact" => $severeImpact
   );
