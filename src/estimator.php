@@ -16,14 +16,14 @@ $data = '{
 
 function covid19ImpactEstimator($data)
 {
-  $decodedData = json_decode($data);
+  $decodedData = json_decode($data, true);
 
-  $reportedCases = $decodedData->reportedCases;
-  $periodType =  $decodedData->periodType;
-  $timeToElapse =  $decodedData->timeToElapse;
-  $population =  $decodedData->population;
-  $totalHospitalBeds =  $decodedData->totalHospitalBeds;
-  $avgDailyIncomeInUSD = $decodedData->region->avgDailyIncomeInUSD;
+  $reportedCases = $decodedData['reportedCases'];
+  $periodType =  $decodedData['periodType'];
+  $timeToElapse =  $decodedData['timeToElapse'];
+  $population =  $decodedData['population'];
+  $totalHospitalBeds =  $decodedData['totalHospitalBeds'];
+  $avgDailyIncomeInUSD = $decodedData['region']['avgDailyIncomeInUSD'];
 
   if ($timeToElapse > 0 && $periodType == "days")
   {
