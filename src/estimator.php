@@ -94,4 +94,4 @@ function covid19ImpactEstimator($data)
   echo $data;
 }
 
-covid19ImpactEstimator($data);
+// covid19ImpactEstimator($data);
