@@ -88,7 +88,7 @@ function covid19ImpactEstimator($data)
     )
   );
 
-  $data = json_encode($response);
+  $data = json_encode($response, JSON_FORCE_OBJECT);
   
   return $data;
 }
