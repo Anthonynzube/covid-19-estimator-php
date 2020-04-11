@@ -1,22 +1,23 @@
 <?php
 
-// $data = '{
-//     "region": {
-//         "name": "Africa",
-//         "avgAge": 19.7,
-//         "avgDailyIncomeInUSD": 5,
-//         "avgDailyIncomePopulation": 0.71
-//     },
-//     "periodType": "days",
-//     "timeToElapse": 58,
-//     "reportedCases": 674,
-//     "population": 66622705,
-//     "totalHospitalBeds": 1380614
-// }';
+$data = '{
+    "region": {
+        "name": "Africa",
+        "avgAge": 19.7,
+        "avgDailyIncomeInUSD": 5,
+        "avgDailyIncomePopulation": 0.71
+    },
+    "periodType": "days",
+    "timeToElapse": 58,
+    "reportedCases": 674,
+    "population": 66622705,
+    "totalHospitalBeds": 1380614
+}';
 
 function covid19ImpactEstimator($data)
 {
-  $decodedData = json_decode($data);
+  $decodedData = json_decode(json_encode($data));
+  $decodedData = json_decode($decodedData);
 
   $timeToElapse = $decodedData->timeToElapse;
   $periodType = $decodedData->periodType;
@@ -67,30 +68,30 @@ function covid19ImpactEstimator($data)
   $severeImpactDollarsInFlight = round(($severeImpactInfectionsByRequestedTime * 0.65 * $avgDailyIncomeInUSD * 30), 2);
 
   $response = array(
-    // "data" => $decodedData,
-    // "impact" => array(
-    //   'currentlyInfected' => $impactCurrentlyInfected,
-    //   'infectionsByRequestedTime' => $impactInfectionsByRequestedTime,
-    //   'severeCasesByRequestedTime' => $impactSevereCasesByRequestedTime,
-    //   'hospitalBedsByRequestedTime' => $impactHospitalBedsByRequestedTime,
-    //   'casesForICUByRequestedTime' => $impactCasesForICUByRequestedTime,
-    //   'casesForVentilatorsByRequestedTime' => $impactCasesForVentilatorsByRequestedTime,
-    //   'dollarsInFlight' => $impactDollarsInFlight
-    // ),
-    // "severeImpact" => array(
-    //   'currentlyInfected' => $severeImpactCurrentlyInfected,
-    //   'infectionsByRequestedTime' => $severeImpactInfectionsByRequestedTime,
-    //   'severeCasesByRequestedTime' => $severeImpactSevereCasesByRequestedTime,
-    //   'hospitalBedsByRequestedTime' => $severeImpactHospitalBedsByRequestedTime,
-    //   'casesForICUByRequestedTime' => $severeImpactCasesForICUByRequestedTime,
-    //   'casesForVentilatorsByRequestedTime' => $severeImpactCasesForVentilatorsByRequestedTime,
-    //   'dollarsInFlight' => $severeImpactDollarsInFlight
-    // )
+    "data" => $decodedData,
+    "impact" => array(
+      'currentlyInfected' => $impactCurrentlyInfected,
+      'infectionsByRequestedTime' => $impactInfectionsByRequestedTime,
+      'severeCasesByRequestedTime' => $impactSevereCasesByRequestedTime,
+      'hospitalBedsByRequestedTime' => $impactHospitalBedsByRequestedTime,
+      'casesForICUByRequestedTime' => $impactCasesForICUByRequestedTime,
+      'casesForVentilatorsByRequestedTime' => $impactCasesForVentilatorsByRequestedTime,
+      'dollarsInFlight' => $impactDollarsInFlight
+    ),
+    "severeImpact" => array(
+      'currentlyInfected' => $severeImpactCurrentlyInfected,
+      'infectionsByRequestedTime' => $severeImpactInfectionsByRequestedTime,
+      'severeCasesByRequestedTime' => $severeImpactSevereCasesByRequestedTime,
+      'hospitalBedsByRequestedTime' => $severeImpactHospitalBedsByRequestedTime,
+      'casesForICUByRequestedTime' => $severeImpactCasesForICUByRequestedTime,
+      'casesForVentilatorsByRequestedTime' => $severeImpactCasesForVentilatorsByRequestedTime,
+      'dollarsInFlight' => $severeImpactDollarsInFlight
+    )
   );
 
   $data = json_encode($response, JSON_FORCE_OBJECT);
   
-  return $data;
+  echo $data;
 }
 
-// covid19ImpactEstimator($data);
+covid19ImpactEstimator($data);
