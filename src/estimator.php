@@ -67,25 +67,25 @@ function covid19ImpactEstimator($data)
   $severeImpactDollarsInFlight = round(($severeImpactInfectionsByRequestedTime * 0.65 * $avgDailyIncomeInUSD * 30), 2);
 
   $response = array(
-    "data" => $decodedData,
-    "impact" => array(
-      'currentlyInfected' => $impactCurrentlyInfected,
-      'infectionsByRequestedTime' => $impactInfectionsByRequestedTime,
-      'severeCasesByRequestedTime' => $impactSevereCasesByRequestedTime,
-      'hospitalBedsByRequestedTime' => $impactHospitalBedsByRequestedTime,
-      'casesForICUByRequestedTime' => $impactCasesForICUByRequestedTime,
-      'casesForVentilatorsByRequestedTime' => $impactCasesForVentilatorsByRequestedTime,
-      'dollarsInFlight' => $impactDollarsInFlight
-    ),
-    "severeImpact" => array(
-      'currentlyInfected' => $severeImpactCurrentlyInfected,
-      'infectionsByRequestedTime' => $severeImpactInfectionsByRequestedTime,
-      'severeCasesByRequestedTime' => $severeImpactSevereCasesByRequestedTime,
-      'hospitalBedsByRequestedTime' => $severeImpactHospitalBedsByRequestedTime,
-      'casesForICUByRequestedTime' => $severeImpactCasesForICUByRequestedTime,
-      'casesForVentilatorsByRequestedTime' => $severeImpactCasesForVentilatorsByRequestedTime,
-      'dollarsInFlight' => $severeImpactDollarsInFlight
-    )
+    // "data" => $decodedData,
+    // "impact" => array(
+    //   'currentlyInfected' => $impactCurrentlyInfected,
+    //   'infectionsByRequestedTime' => $impactInfectionsByRequestedTime,
+    //   'severeCasesByRequestedTime' => $impactSevereCasesByRequestedTime,
+    //   'hospitalBedsByRequestedTime' => $impactHospitalBedsByRequestedTime,
+    //   'casesForICUByRequestedTime' => $impactCasesForICUByRequestedTime,
+    //   'casesForVentilatorsByRequestedTime' => $impactCasesForVentilatorsByRequestedTime,
+    //   'dollarsInFlight' => $impactDollarsInFlight
+    // ),
+    // "severeImpact" => array(
+    //   'currentlyInfected' => $severeImpactCurrentlyInfected,
+    //   'infectionsByRequestedTime' => $severeImpactInfectionsByRequestedTime,
+    //   'severeCasesByRequestedTime' => $severeImpactSevereCasesByRequestedTime,
+    //   'hospitalBedsByRequestedTime' => $severeImpactHospitalBedsByRequestedTime,
+    //   'casesForICUByRequestedTime' => $severeImpactCasesForICUByRequestedTime,
+    //   'casesForVentilatorsByRequestedTime' => $severeImpactCasesForVentilatorsByRequestedTime,
+    //   'dollarsInFlight' => $severeImpactDollarsInFlight
+    // )
   );
 
   $data = json_encode($response, JSON_FORCE_OBJECT);
