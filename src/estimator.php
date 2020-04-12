@@ -19,16 +19,16 @@ function covid19ImpactEstimator($data)
   if (!empty($data))
   {
     
-    $timeToElapse = $data['timeToElapse'];
-    $periodType = $data['periodType'];
-    $reportedCases = $data['reportedCases'];
-    $population =  $data['population'];
-    $totalHospitalBeds =  $data['totalHospitalBeds'];
-    $avgDailyIncomeInUSD = $data['region']['avgDailyIncomeInUSD'];
-    $avgDailyIncomePopulation = $data['region']['avgDailyIncomePopulation'];
+    $timeToElapse = $data["timeToElapse"];
+    $periodType = $data["periodType"];
+    $reportedCases = $data["reportedCases"];
+    $population =  $data["population"];
+    $totalHospitalBeds =  $data["totalHospitalBeds"];
+    $avgDailyIncomeInUSD = $data["region"]["avgDailyIncomeInUSD"];
+    $avgDailyIncomePopulation = $data["region"]["avgDailyIncomePopulation"];
 
-    $impactCurrentlyInfected = $data['reportedCases'] * 10;
-    $severeImpactCurrentlyInfected = $data['reportedCases'] * 50;
+    $impactCurrentlyInfected = $data["reportedCases"] * 10;
+    $severeImpactCurrentlyInfected = $data["reportedCases"] * 50;
 
     if ($periodType === 'days')
     {
@@ -90,7 +90,9 @@ function covid19ImpactEstimator($data)
       )
     );
     
-    return $data;
+    // return $data;
+highlight_string("<?php\n\$data =\n" . var_export($data, true) . ";\n?>");
+
   } else {
     return "Data should not be empty";
   }
