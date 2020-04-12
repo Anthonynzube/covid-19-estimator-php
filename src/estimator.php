@@ -89,7 +89,7 @@ function covid19ImpactEstimator($data)
     )
   );
   
-  return ($data);
+  return $data;
 }
 
 // covid19ImpactEstimator($data);
