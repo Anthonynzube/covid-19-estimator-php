@@ -29,9 +29,10 @@ jobs:
         run: |
           yarn install
           yarn add phplint
+
       - name: Run Audits
         run: yarn phplint './src/**/*.php'
-  
+
   ch-1:
     needs: lint
     name: audit challenge 1
@@ -55,6 +56,7 @@ jobs:
         run: |
           yarn install
           yarn add xml2json axios @actions/core @actions/github
+
       - name: Install PHP
         uses: shivammathur/setup-php@v1
         with:
@@ -64,6 +66,7 @@ jobs:
         run: |
           composer require --dev phpunit/phpunit
           composer require guzzlehttp/guzzle:~6.0
+
       - name: Prepare Audits
         uses: actions/checkout@v2
         with:
@@ -73,6 +76,7 @@ jobs:
       - name: Run Audits
         run: |
           vendor/bin/phpunit ./audits/ch-1 --testdox --log-junit audits/ch-1.xml
+
       - name: Report Audits
         uses: BuildforSDG-Cohort1-Assessment/jest-out@v1
         with:
@@ -103,6 +107,7 @@ jobs:
         run: |
           yarn install
           yarn add xml2json axios @actions/core @actions/github
+
       - name: Install PHP
         uses: shivammathur/setup-php@v1
         with:
@@ -112,6 +117,7 @@ jobs:
         run: |
           composer require --dev phpunit/phpunit
           composer require guzzlehttp/guzzle:~6.0
+
       - name: Prepare Audits
         uses: actions/checkout@v2
         with:
@@ -151,6 +157,7 @@ jobs:
         run: |
           yarn install
           yarn add xml2json axios @actions/core @actions/github
+
       - name: Install PHP
         uses: shivammathur/setup-php@v1
         with:
@@ -160,6 +167,7 @@ jobs:
         run: |
           composer require --dev phpunit/phpunit
           composer require guzzlehttp/guzzle:~6.0
+
       - name: Prepare Audits
         uses: actions/checkout@v2
         with:
@@ -186,37 +194,37 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v2
 
-    - name: Install Node
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Install Deps
-      run: yarn add axios properties-reader @lhci/cli@0.3.x @actions/core @actions/github
+      - name: Install Deps
+        run: yarn add axios properties-reader @lhci/cli@0.3.x @actions/core @actions/github
 
-    - name: Prepare Audits
-      uses: actions/checkout@v2
-      with: 
-        repository: BuildforSDG-Cohort1-Assessment/covid-19-estimator-audits-js
-        path: audits
-    
-    - name: Injest Frontend App URL
-      id: props
-      uses: chalu/properties-io@v1
-      with:
-        file: ./app.properties
-        read-from: frontend.url
-    
-    - name: Run Audits
-      run: npx lhci autorun --collect.url=${{ steps.props.outputs.value }} --config=./audits/lighthouserc.json
-    
-    - name: Report Audits
-      uses: BuildforSDG-Cohort1-Assessment/lighthouse-out@v1
-      if: always()
-  
+      - name: Prepare Audits
+        uses: actions/checkout@v2
+        with:
+          repository: BuildforSDG-Cohort1-Assessment/covid-19-estimator-audits-js
+          path: audits
+
+      - name: Injest Frontend App URL
+        id: props
+        uses: chalu/properties-io@v1
+        with:
+          file: ./app.properties
+          read-from: frontend.url
+
+      - name: Run Audits
+        run: npx lhci autorun --collect.url=${{ steps.props.outputs.value }} --config=./audits/lighthouserc.json
+
+      - name: Report Audits
+        uses: BuildforSDG-Cohort1-Assessment/lighthouse-out@v1
+        if: always()
+
   ch-4:
     needs: lighthouse
     name: audit frontend UI
@@ -227,32 +235,32 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v2
 
-    - name: Install Node
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Install Deps
-      run: yarn add jest axios on-covid-19 properties-reader xml2json puppeteer @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+      - name: Install Deps
+        run: yarn add jest axios on-covid-19 properties-reader xml2json puppeteer @babel/core @babel/preset-env babel-jest @actions/core @actions/github
 
-    - name: Prepare Audits
-      uses: actions/checkout@v2
-      with: 
-        repository: BuildforSDG-Cohort1-Assessment/covid-19-estimator-audits-js
-        path: audits
+      - name: Prepare Audits
+        uses: actions/checkout@v2
+        with:
+          repository: BuildforSDG-Cohort1-Assessment/covid-19-estimator-audits-js
+          path: audits
 
-    - name: Run Audits
-      run: npx jest --config=audits/jest.config.js audits/ch-4 --json --outputFile=audits/ch-4.json --noStackTrace
+      - name: Run Audits
+        run: npx jest --config=audits/jest.config.js audits/ch-4 --json --outputFile=audits/ch-4.json --noStackTrace
 
-    - name: Report Audits
-      uses: BuildforSDG-Cohort1-Assessment/jest-out@v1
-      with:
-        challenge: ch-4
-        lang: javascript
-      if: always()
+      - name: Report Audits
+        uses: BuildforSDG-Cohort1-Assessment/jest-out@v1
+        with:
+          challenge: ch-4
+          lang: javascript
+        if: always()
 
   ch-5:
     needs: ch-3
@@ -264,29 +272,29 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v2
 
-    - name: Install Node
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Install Deps
-      run: yarn add jest axios on-covid-19 properties-reader xml2json @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+      - name: Install Deps
+        run: yarn add jest axios on-covid-19 properties-reader xml2json @babel/core @babel/preset-env babel-jest @actions/core @actions/github
 
-    - name: Prepare Audits
-      uses: actions/checkout@v2
-      with: 
-        repository: BuildforSDG-Cohort1-Assessment/covid-19-estimator-audits-js
-        path: audits
+      - name: Prepare Audits
+        uses: actions/checkout@v2
+        with:
+          repository: BuildforSDG-Cohort1-Assessment/covid-19-estimator-audits-js
+          path: audits
 
-    - name: Run Audits
-      run: npx jest --config=audits/jest.config.js audits/ch-5 --json --outputFile=audits/ch-5.json --noStackTrace
+      - name: Run Audits
+        run: npx jest --config=audits/jest.config.js audits/ch-5 --json --outputFile=audits/ch-5.json --noStackTrace
 
-    - name: Report Audits
-      uses: BuildforSDG-Cohort1-Assessment/jest-out@v1
-      with:
-        challenge: ch-5
-        lang: javascript
-      if: always()
+      - name: Report Audits
+        uses: BuildforSDG-Cohort1-Assessment/jest-out@v1
+        with:
+          challenge: ch-5
+          lang: javascript
+        if: always()
